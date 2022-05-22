@@ -103,8 +103,6 @@ namespace WwisePCKUnpacker
                 }
                 #endregion
 
-                reader.BaseStream.Position = Header.m_uHeaderSize;
-
                 // TODO: not sure if it works correctly with all files
                 ExtractEntries(banks, reader, "Bank");
                 ExtractEntries(streams, reader, "Streamed");
@@ -120,7 +118,6 @@ namespace WwisePCKUnpacker
             if (entries.Length == 0)
                 return;
 
-            //reader.BaseStream.Position += entries[0].uStartingBlock;
             for (int i = 0; i < entries.Length; i++)
             {
                 FileLUT entry = entries[i];
@@ -129,7 +126,7 @@ namespace WwisePCKUnpacker
                 // alignment current offset to block size (2048 by default)
                 reader.AlignSeek(entry.uBlockSize);
 
-                if (language.id == SelectedLang || (WithSFX && language.id == FileLUT.AK_INVALID_LANGUAGE_ID))
+                if (language.id == SelectedLang || (WithSFX && language.id == FileLUT.AK_INVALID_LANGUAGE_ID) || SelectedLang == 0)
                 {
                     // remember position before writing
                     long currPos = reader.BaseStream.Position;
